@@ -17,11 +17,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.MutableLiveData
 import java.util.Random
 
 class PasswordGeneratorDialog(
     private val context: FragmentActivity,
-    private val viewModel: PasswordEditViewModel
+    private val password: MutableLiveData<String>
 ) : DialogFragment() {
     var pass: String = ""
     var length: Int = 5
@@ -222,8 +223,7 @@ class PasswordGeneratorDialog(
         val dialog = builder.create()
 
         generateButton.setOnClickListener {
-
-            viewModel.password.value = pass
+            password.value = pass
 
             dialog.dismiss()
         }

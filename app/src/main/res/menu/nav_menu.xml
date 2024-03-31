@@ -5,12 +5,12 @@
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_home"
             android:icon="@drawable/list"
-            android:title="Home"></item>
+            android:title="List"></item>
     </group>
     <group android:checkableBehavior="single">
         <item android:id="@+id/nav_gen"
             android:icon="@drawable/password"
-            android:title="Generator"></item>
+            android:title="Add login"></item>
     </group>
 
 </menu>

@@ -3,9 +3,7 @@ package com.example.passwordmanager.mvvm.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListAdapter
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.passwordmanager.R
 import com.example.passwordmanager.database.LoginEntity
@@ -13,7 +11,8 @@ import com.example.passwordmanager.database.LoginEntity
 class LoginListAdapter(private val onItemClickListener: OnItemClickListener) :
     RecyclerView.Adapter<LoginListAdapter.LoginViewHolder>() {
 
-    private val logins = mutableListOf<LoginEntity>()
+    private val loginsFull = mutableListOf<LoginEntity>()
+    private var loginsFiltered = mutableListOf<LoginEntity>()
 
     inner class LoginViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvName: TextView = itemView.findViewById(R.id.name_text_view)
@@ -41,18 +40,34 @@ class LoginListAdapter(private val onItemClickListener: OnItemClickListener) :
     }
 
     override fun onBindViewHolder(holder: LoginViewHolder, position: Int) {
-        holder.bind(logins[position])
+        holder.bind(loginsFiltered[position])
     }
 
     override fun getItemCount(): Int {
-        return logins.size
+        return loginsFiltered.size
     }
 
     fun setLogins(logins: List<LoginEntity>) {
-        this.logins.clear()
-        this.logins.addAll(logins)
+        this.loginsFull.clear()
+        this.loginsFull.addAll(logins)
+        loginsFiltered = loginsFull
         notifyDataSetChanged()
     }
+
+    fun filterLogins(query: String) {
+        if (query.isEmpty()) {
+            loginsFiltered = loginsFull
+        } else {
+            loginsFiltered = loginsFull.filter { it.name.contains(query, ignoreCase = true) }.toMutableList()
+        }
+        notifyDataSetChanged()
+    }
+
+//    fun setLogins(logins: List<LoginEntity>) {
+//        this.logins.clear()
+//        this.logins.addAll(logins)
+//        notifyDataSetChanged()
+//    }
 
     interface OnItemClickListener {
         fun onItemClick(login: LoginEntity)

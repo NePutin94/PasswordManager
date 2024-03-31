@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -42,6 +44,20 @@ class PasswordList : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.adapter = loginListAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val searchView = view.findViewById<SearchView>(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                loginListAdapter.filterLogins(query ?: "")
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                loginListAdapter.filterLogins(newText ?: "")
+                return true
+            }
+        })
+
         return view
     }
 
@@ -63,5 +79,14 @@ class PasswordList : Fragment() {
         loginViewModel.allLogins.observe(viewLifecycleOwner, Observer { logins ->
             loginListAdapter.setLogins(logins)
         })
+    }
+
+    companion object {
+        fun newInstance(): PasswordList {
+            val fragment = PasswordList()
+            val args = Bundle()
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

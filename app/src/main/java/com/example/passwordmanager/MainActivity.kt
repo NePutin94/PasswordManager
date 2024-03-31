@@ -37,6 +37,8 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         when (item.itemId) {
             R.id.nav_home -> supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, PasswordList()).commit()
+            R.id.nav_gen -> supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, PasswordGenerator()).commit()
         }
         return true
     }

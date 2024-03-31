@@ -14,6 +14,7 @@ import com.example.passwordmanager.databinding.FragmentPasswordEditBinding
 import com.example.passwordmanager.mvvm.Repository.LoginRepository
 import com.example.passwordmanager.PasswordEditViewModel;
 import com.example.passwordmanager.PasswordGeneratorDialog
+import com.example.passwordmanager.PasswordList
 
 class EditViewModelFactory(private val loginRepository: LoginRepository, private val entityId: Int) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -44,6 +45,14 @@ class PasswordEdit : Fragment() {
         return binding.root
     }
 
+    private fun openPasswordListFragment() {
+        val passwordListFragment = PasswordList.newInstance()
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, passwordListFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val loginRepository = LoginRepository(AppDatabase.getDatabase(requireContext()).loginDao())
@@ -57,12 +66,17 @@ class PasswordEdit : Fragment() {
         binding.generateButton.setOnClickListener {
             PasswordGeneratorDialog(
                 requireActivity(),
-                viewModel
+                viewModel.password
             ).show(childFragmentManager, "generate_password_dialog")
         }
         binding.saveButton.setOnClickListener {
-            viewModel.update()
-            Toast.makeText(context, "Сhanges are saved!", Toast.LENGTH_SHORT).show()
+            if (viewModel.validateInput()) {
+                viewModel.update()
+                Toast.makeText(context, "Changes are saved!", Toast.LENGTH_SHORT).show()
+                openPasswordListFragment()
+            }else{
+                Toast.makeText(context, "Name and password fields are required", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

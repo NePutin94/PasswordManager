@@ -1,5 +1,6 @@
 package com.example.passwordmanager
 
+import android.text.SpannableString
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,30 +10,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PasswordEditViewModel(private val loginRepository: LoginRepository, private val loginEntityId: Int) : ViewModel() {
+class PasswordGeneratorViewModel (private val loginRepository: LoginRepository) : ViewModel() {
     val name: MutableLiveData<String> = MutableLiveData()
     val email: MutableLiveData<String> = MutableLiveData()
     val password: MutableLiveData<String> = MutableLiveData()
     val url: MutableLiveData<String> = MutableLiveData()
     val note: MutableLiveData<String> = MutableLiveData()
-
-    private fun LoadEntity() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val entity = loginRepository.get(loginEntityId)
-            withContext(Dispatchers.Main) {
-                entity.let {
-                    name.value = it.name
-                    email.value = it.email
-                    password.value = it.password
-                    url.value = it.url
-                    note.value = it.note
-                }
-            }
-        }
-    }
-    init {
-        LoadEntity()
-    }
 
     fun validateInput(): Boolean {
         if (name.value.isNullOrEmpty()) {
@@ -44,17 +27,17 @@ class PasswordEditViewModel(private val loginRepository: LoginRepository, privat
         return true
     }
 
-    fun update() {
+    fun insert() {
         val updatedEntity = LoginEntity(
-            loginEntityId,
+            0,
             name.value ?: "",
             email.value ?: "",
-            password.value ?: "",
+            password.value ?:"",
             url.value ?: "",
             note.value ?: ""
         )
         viewModelScope.launch(Dispatchers.IO) {
-            loginRepository.update(updatedEntity)
+            loginRepository.insert(updatedEntity)
         }
     }
 }
