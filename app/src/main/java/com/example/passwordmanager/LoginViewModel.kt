@@ -1,4 +1,4 @@
-package com.example.passwordmanager.mvvm.ViewModel
+package com.example.passwordmanager
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

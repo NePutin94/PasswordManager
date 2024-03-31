@@ -17,4 +17,8 @@ interface LoginDao {
 
     @Query("SELECT * FROM logins")
     fun getAllLogins(): LiveData<List<LoginEntity>>
+
+    @Query("SELECT * FROM logins WHERE id = :id")
+    fun getLoginById(id: Int): LoginEntity
+
 }

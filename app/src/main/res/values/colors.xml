@@ -3,4 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#41B7E6</color>
+    <color name="digit_color">#E64146</color>
+    <color name="lower_letter_color">#41E6E6</color>
+    <color name="upper_letter_color">#415CE6</color>
+    <color name="special_char_color">#CD41E6</color>
 </resources>

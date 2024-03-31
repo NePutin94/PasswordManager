@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.passwordmanager.database.AppDatabase
 import com.example.passwordmanager.database.LoginEntity
 import com.example.passwordmanager.mvvm.Repository.LoginRepository
-import com.example.passwordmanager.mvvm.ViewModel.LoginViewModel
 import com.example.passwordmanager.mvvm.adapters.LoginListAdapter
 
 class LoginViewModelFactory(private val loginRepository: LoginRepository) : ViewModelProvider.Factory {
@@ -36,13 +36,21 @@ class PasswordList : Fragment() {
         val view = inflater.inflate(R.layout.fragment_password_list, container, false)
         loginListAdapter = LoginListAdapter(object : LoginListAdapter.OnItemClickListener {
             override fun onItemClick(login: LoginEntity) {
-                // TODO: Handle item click
+                openPasswordEditFragment(login)
             }
         })
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.adapter = loginListAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         return view
+    }
+
+    private fun openPasswordEditFragment(login: LoginEntity) {
+        val passwordEditFragment = PasswordEdit.newInstance(login)
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, passwordEditFragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
